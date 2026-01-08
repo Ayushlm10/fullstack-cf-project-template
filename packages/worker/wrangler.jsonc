@@ -1,0 +1,146 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+
+  // ============================================
+  // Basic Configuration
+  // ============================================
+  "name": "fullstack-bun-monorepo-worker",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-06",
+
+  // ============================================
+  // Account & Deployment
+  // ============================================
+  // TODO: Add your Cloudflare account ID
+  // Find it at: https://dash.cloudflare.com/ → Workers & Pages → Overview
+  // "account_id": "your-account-id-here",
+
+  // Deploy to workers.dev subdomain (true) or custom routes only (false)
+  "workers_dev": true,
+
+  // ============================================
+  // Routes & Custom Domains
+  // ============================================
+  // By default, the worker is PRIVATE (RPC-only via service binding)
+  // Uncomment below ONLY if you need a public API accessible via HTTP
+  // Example: For webhooks, external API access, or third-party integrations
+  // "routes": [
+  //   {
+  //     "pattern": "your-project-api.yourdomain.com/*",
+  //     "zone_name": "yourdomain.com"
+  //   }
+  // ],
+
+  // ============================================
+  // Environment Variables
+  // ============================================
+  // Secrets should be set via CLI: wrangler secret put SECRET_NAME
+  // Non-secret vars can be defined here:
+  // "vars": {
+  //   "ENVIRONMENT": "production",
+  //   "API_VERSION": "v1"
+  // },
+
+  // ============================================
+  // KV Namespaces (Key-Value Storage)
+  // ============================================
+  // "kv_namespaces": [
+  //   {
+  //     "binding": "CACHE",
+  //     "id": "your-kv-namespace-id"
+  //   }
+  // ],
+
+  // ============================================
+  // D1 Databases (SQL)
+  // ============================================
+  // "d1_databases": [
+  //   {
+  //     "binding": "DB",
+  //     "database_name": "your-database-name",
+  //     "database_id": "your-database-id"
+  //   }
+  // ],
+
+  // ============================================
+  // R2 Buckets (Object Storage)
+  // ============================================
+  // "r2_buckets": [
+  //   {
+  //     "binding": "ASSETS",
+  //     "bucket_name": "your-bucket-name"
+  //   }
+  // ],
+
+  // ============================================
+  // Durable Objects
+  // ============================================
+  // "durable_objects": {
+  //   "bindings": [
+  //     {
+  //       "name": "COUNTER",
+  //       "class_name": "Counter",
+  //       "script_name": "fullstack-bun-monorepo-worker"
+  //     }
+  //   ]
+  // },
+
+  // ============================================
+  // Queue Bindings (for async processing)
+  // ============================================
+  // "queues": {
+  //   "producers": [
+  //     {
+  //       "binding": "MY_QUEUE",
+  //       "queue": "my-queue-name"
+  //     }
+  //   ],
+  //   "consumers": [
+  //     {
+  //       "queue": "my-queue-name",
+  //       "max_batch_size": 10,
+  //       "max_batch_timeout": 30
+  //     }
+  //   ]
+  // },
+
+  // ============================================
+  // Observability & Monitoring
+  // ============================================
+  // "logpush": true,
+  // "tail_consumers": [
+  //   {
+  //     "service": "log-consumer-worker"
+  //   }
+  // ],
+
+  // ============================================
+  // Build Configuration
+  // ============================================
+  // Custom build command (if needed)
+  // "build": {
+  //   "command": "bun run build"
+  // },
+
+  // ============================================
+  // Limits & Performance
+  // ============================================
+  // "limits": {
+  //   "cpu_ms": 50
+  // },
+
+  // ============================================
+  // Node.js Compatibility
+  // ============================================
+  // Uncomment if you need Node.js APIs
+  // "compatibility_flags": ["nodejs_compat"],
+
+  // ============================================
+  // Local Development
+  // ============================================
+  // Port for local development server
+  // "dev": {
+  //   "port": 8787,
+  //   "local_protocol": "http"
+  // }
+}

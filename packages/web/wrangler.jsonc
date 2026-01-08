@@ -1,0 +1,146 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+
+  // ============================================
+  // Basic Configuration
+  // ============================================
+  "name": "fullstack-bun-monorepo-web",
+  "main": "@tanstack/react-start/server-entry",
+  "compatibility_date": "2025-09-06",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // ============================================
+  // Account & Deployment
+  // ============================================
+  // TODO: Add your Cloudflare account ID
+  // Find it at: https://dash.cloudflare.com/ → Workers & Pages → Overview
+  // "account_id": "your-account-id-here",
+
+  // Deploy to workers.dev subdomain (true) or custom routes only (false)
+  "workers_dev": true,
+
+  // ============================================
+  // Routes & Custom Domains
+  // ============================================
+  // Uncomment and configure for production custom domains
+  // Example: project-name.yourdomain.com
+  // "routes": [
+  //   {
+  //     "pattern": "your-project.yourdomain.com/*",
+  //     "zone_name": "yourdomain.com"
+  //   }
+  // ],
+
+  // ============================================
+  // Service Bindings (Worker RPC)
+  // ============================================
+  // This binds the web worker to the backend worker for type-safe RPC calls
+  "services": [
+    {
+      "binding": "WORKER_RPC",
+      "service": "fullstack-bun-monorepo-worker",
+      "entrypoint": "WorkerRpc",
+    },
+  ],
+
+  // ============================================
+  // Environment Variables
+  // ============================================
+  // Secrets should be set via CLI: wrangler secret put SECRET_NAME
+  // Non-secret vars can be defined here:
+  // "vars": {
+  //   "ENVIRONMENT": "production",
+  //   "APP_VERSION": "1.0.0"
+  // },
+
+  // ============================================
+  // KV Namespaces (Key-Value Storage)
+  // ============================================
+  // Example: Session storage, cache, etc.
+  // "kv_namespaces": [
+  //   {
+  //     "binding": "SESSIONS",
+  //     "id": "your-kv-namespace-id"
+  //   }
+  // ],
+
+  // ============================================
+  // D1 Databases (SQL)
+  // ============================================
+  // If you need direct database access from the web worker
+  // (Usually better to go through the backend worker RPC)
+  // "d1_databases": [
+  //   {
+  //     "binding": "DB",
+  //     "database_name": "your-database-name",
+  //     "database_id": "your-database-id"
+  //   }
+  // ],
+
+  // ============================================
+  // R2 Buckets (Object Storage)
+  // ============================================
+  // Example: For serving static assets, user uploads, etc.
+  // "r2_buckets": [
+  //   {
+  //     "binding": "ASSETS",
+  //     "bucket_name": "your-bucket-name"
+  //   }
+  // ],
+
+  // ============================================
+  // Analytics Engine
+  // ============================================
+  // For tracking user events, metrics, etc.
+  // "analytics_engine_datasets": [
+  //   {
+  //     "binding": "ANALYTICS"
+  //   }
+  // ],
+
+  // ============================================
+  // Observability & Monitoring
+  // ============================================
+  // "logpush": true,
+  // "tail_consumers": [
+  //   {
+  //     "service": "log-consumer-worker"
+  //   }
+  // ],
+
+  // ============================================
+  // Build Configuration
+  // ============================================
+  // Handled by Vite/TanStack Start
+  // Custom build command if needed:
+  // "build": {
+  //   "command": "bun run build"
+  // },
+
+  // ============================================
+  // Assets & Static Files
+  // ============================================
+  // TanStack Start handles this via Vite
+  // But you can add custom asset handling:
+  // "assets": {
+  //   "directory": "./public",
+  //   "binding": "ASSETS"
+  // },
+
+  // ============================================
+  // Limits & Performance
+  // ============================================
+  // "limits": {
+  //   "cpu_ms": 50
+  // },
+
+  // ============================================
+  // Local Development
+  // ============================================
+  // Port for local development server
+  // Note: Vite dev server runs separately, this is for wrangler dev
+  // "dev": {
+  //   "port": 3000,
+  //   "local_protocol": "http"
+  // }
+}
