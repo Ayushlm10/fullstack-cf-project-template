@@ -14,6 +14,8 @@
     "format:check": "oxfmt --check",
     "typecheck": "bun --filter fullstack-cf-project-template-worker typecheck && bun --filter fullstack-cf-project-template-web typecheck",
     "ci": "bun run lint && bun run format:check && bun run typecheck",
+    "deploy:worker": "bun --filter fullstack-cf-project-template-worker run deploy",
+    "deploy:web": "bun --filter fullstack-cf-project-template-web run deploy",
     "deploy": "bun run deploy:worker && bun run deploy:web"
   },
   "devDependencies": {

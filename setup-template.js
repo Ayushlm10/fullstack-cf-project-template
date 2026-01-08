@@ -211,6 +211,9 @@ async function main() {
       "dev:worker": `bun --filter ${workerPkgName} dev`,
       "dev:web": `bun --filter ${webPkgName} dev`,
       typecheck: `bun --filter ${workerPkgName} typecheck && bun --filter ${webPkgName} typecheck`,
+      "deploy:worker": `bun --filter ${workerPkgName} run deploy`,
+      "deploy:web": `bun --filter ${webPkgName} run deploy`,
+      deploy: "bun run deploy:worker && bun run deploy:web",
     },
   }));
 
