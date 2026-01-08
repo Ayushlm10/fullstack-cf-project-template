@@ -101,27 +101,27 @@ The web package can call the worker via RPC using service bindings for type-safe
 
 ```typescript
 export class WorkerRpc extends WorkerEntrypoint {
-	async sayHello(name: string) {
-		return { message: `Hello, ${name}!`, timestamp: Date.now() };
-	}
+  async sayHello(name: string) {
+    return { message: `Hello, ${name}!`, timestamp: Date.now() };
+  }
 }
 ```
 
 ### In the Web App (TanStack Start routes)
 
 ```typescript
-import { createFileRoute } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
-import { getWorkerRpc } from '@/lib/rpc';
+import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { getWorkerRpc } from "@/lib/rpc";
 
-const sayHello = createServerFn({ method: 'GET' }).handler(async () => {
-	const workerRpc = getWorkerRpc();
-	return await workerRpc.sayHello('World');
+const sayHello = createServerFn({ method: "GET" }).handler(async () => {
+  const workerRpc = getWorkerRpc();
+  return await workerRpc.sayHello("World");
 });
 
-export const Route = createFileRoute('/my-route')({
-	loader: async () => sayHello(),
-	component: MyComponent,
+export const Route = createFileRoute("/my-route")({
+  loader: async () => sayHello(),
+  component: MyComponent,
 });
 ```
 
@@ -195,7 +195,6 @@ To enable automated deployments, add these secrets to your GitHub repository:
 
 1. Go to your GitHub repository **Settings** → **Secrets and variables** → **Actions**
 2. Add the following secrets:
-
    - `CLOUDFLARE_API_TOKEN` - Your Cloudflare API token
      - Create at: https://dash.cloudflare.com/profile/api-tokens
      - Use the "Edit Cloudflare Workers" template
@@ -234,20 +233,20 @@ bun run typecheck
 
 ```typescript
 export class WorkerRpc extends WorkerEntrypoint {
-	async myNewMethod(param: string): Promise<Result> {
-		// Your implementation
-		return { data: param };
-	}
+  async myNewMethod(param: string): Promise<Result> {
+    // Your implementation
+    return { data: param };
+  }
 }
 ```
 
 2. **Call from the web app** in any server function:
 
 ```typescript
-import { getWorkerRpc } from '@/lib/rpc';
+import { getWorkerRpc } from "@/lib/rpc";
 
 const workerRpc = getWorkerRpc();
-const result = await workerRpc.myNewMethod('value');
+const result = await workerRpc.myNewMethod("value");
 ```
 
 TypeScript will automatically provide type checking for your new method!
@@ -260,12 +259,12 @@ To add KV, D1, R2, or other bindings:
 
 ```jsonc
 {
-	"kv_namespaces": [
-		{
-			"binding": "MY_KV",
-			"id": "your-namespace-id",
-		},
-	],
+  "kv_namespaces": [
+    {
+      "binding": "MY_KV",
+      "id": "your-namespace-id",
+    },
+  ],
 }
 ```
 
@@ -273,7 +272,7 @@ To add KV, D1, R2, or other bindings:
 
 ```typescript
 interface Env {
-	MY_KV: KVNamespace;
+  MY_KV: KVNamespace;
 }
 ```
 
@@ -281,9 +280,9 @@ interface Env {
 
 ```typescript
 export class WorkerRpc extends WorkerEntrypoint<Env> {
-	async getData(key: string) {
-		return await this.env.MY_KV.get(key);
-	}
+  async getData(key: string) {
+    return await this.env.MY_KV.get(key);
+  }
 }
 ```
 

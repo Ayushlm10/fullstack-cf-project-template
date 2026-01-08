@@ -1,9 +1,6 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
 
-  // ============================================
-  // Basic Configuration
-  // ============================================
   "name": "fullstack-bun-monorepo-worker",
   "main": "src/index.ts",
   "compatibility_date": "2025-09-06",
@@ -15,8 +12,10 @@
   // Find it at: https://dash.cloudflare.com/ → Workers & Pages → Overview
   // "account_id": "your-account-id-here",
 
-  // Deploy to workers.dev subdomain (true) or custom routes only (false)
-  "workers_dev": true,
+  // Worker is PRIVATE by default (no public URL)
+  // Service binding allows web worker to call this via RPC
+  // Set to true only if you need a public workers.dev URL for testing
+  "workers_dev": false,
 
   // ============================================
   // Routes & Custom Domains

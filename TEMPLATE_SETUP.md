@@ -16,6 +16,7 @@ bun run setup-template.js
 ```
 
 The setup script will:
+
 - Prompt you for project name, scope, description, and author
 - **Ask for custom domain configuration** (optional)
 - **Configure subdomain deployment** (e.g., project-name.yourdomain.com)
@@ -32,28 +33,33 @@ The setup script will:
 During setup, you'll be asked about domain configuration:
 
 ### Option 1: No Custom Domain (Default)
+
 - Leave domain field empty
 - Both worker and web deploy to `*.workers.dev` subdomains
 - Best for: Testing, personal projects, quick prototypes
 
 ### Option 2: Custom Domain with Private Worker (Recommended)
+
 - **Base domain:** `yourdomain.com`
 - **Web app:** `project-name.yourdomain.com` (public)
 - **Worker:** Private (RPC-only, accessible only via service binding)
 - **Public API:** No (worker is private)
 
 This is the recommended setup because:
+
 - The worker is called internally by the web app via RPC (zero latency)
 - No public API surface means better security
 - No HTTP overhead between web and worker
 
 ### Option 3: Custom Domain with Public API
+
 - **Base domain:** `yourdomain.com`
 - **Web app:** `project-name.yourdomain.com` (public)
 - **Worker:** `project-name-api.yourdomain.com` (public)
 - **Public API:** Yes
 
 Use this when you need:
+
 - External API access (mobile apps, third parties)
 - Webhooks from external services
 - Public REST API separate from your web app
@@ -91,6 +97,7 @@ If you prefer to set up manually:
 Edit the following files and replace `@fullstack-bun-monorepo` with your scope/name:
 
 **Root `package.json`:**
+
 ```json
 {
   "name": "@your-scope/your-project",
@@ -100,6 +107,7 @@ Edit the following files and replace `@fullstack-bun-monorepo` with your scope/n
 ```
 
 **`packages/worker/package.json`:**
+
 ```json
 {
   "name": "@your-scope/your-project-worker",
@@ -108,6 +116,7 @@ Edit the following files and replace `@fullstack-bun-monorepo` with your scope/n
 ```
 
 **`packages/web/package.json`:**
+
 ```json
 {
   "name": "@your-scope/your-project-web",
@@ -118,6 +127,7 @@ Edit the following files and replace `@fullstack-bun-monorepo` with your scope/n
 ### 2. Update Wrangler Configurations
 
 **`packages/worker/wrangler.jsonc`:**
+
 ```jsonc
 {
   "name": "your-project-worker",
@@ -126,6 +136,7 @@ Edit the following files and replace `@fullstack-bun-monorepo` with your scope/n
 ```
 
 **`packages/web/wrangler.jsonc`:**
+
 ```jsonc
 {
   "name": "your-project-web",
@@ -136,12 +147,14 @@ Edit the following files and replace `@fullstack-bun-monorepo` with your scope/n
 ### 3. Update Imports
 
 Find and replace in all source files:
+
 - `@fullstack-bun-monorepo/` → `@your-scope/`
 - `fullstack-bun-monorepo` → `your-project`
 
 ### 4. Clean Up Template Files
 
 Remove template-specific documentation:
+
 ```bash
 rm CLAUDE.md TEMPLATE_SETUP.md setup-template.js
 ```
@@ -173,11 +186,13 @@ Edit these `.env` files with your actual values.
 Update `wrangler.jsonc` files with your Cloudflare account details:
 
 **Important fields to configure:**
+
 - `account_id` - Your Cloudflare account ID (find at: https://dash.cloudflare.com/)
 - `workers_dev` - Set to `true` for development
 - Add any bindings you need (KV, D1, R2, etc.)
 
 **If you configured a custom domain:**
+
 - Ensure your domain (e.g., `yourdomain.com`) is added to your Cloudflare account
 - Go to https://dash.cloudflare.com/ → Add Site
 - Follow Cloudflare's DNS setup instructions

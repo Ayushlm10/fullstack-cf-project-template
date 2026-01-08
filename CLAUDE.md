@@ -47,7 +47,7 @@ The web package imports types directly from the worker package:
 
 ```typescript
 // packages/web/env.d.ts
-import type { WorkerRpc } from '../worker/src/rpc';
+import type { WorkerRpc } from "../worker/src/rpc";
 ```
 
 This creates a **direct TypeScript dependency** between packages. The monorepo structure enables this cross-package type sharing.
@@ -57,10 +57,10 @@ This creates a **direct TypeScript dependency** between packages. The monorepo s
 **CORRECT way to access Worker RPC** in TanStack Start server functions:
 
 ```typescript
-import { getWorkerRpc } from '@/lib/rpc';
+import { getWorkerRpc } from "@/lib/rpc";
 
 const workerRpc = getWorkerRpc();
-const result = await workerRpc.sayHello('World');
+const result = await workerRpc.sayHello("World");
 ```
 
 The `getWorkerRpc()` helper is defined in `packages/web/src/lib/rpc.ts`.
@@ -121,9 +121,9 @@ When adding RPC methods that the web package will call:
 
 ```typescript
 export class WorkerRpc extends WorkerEntrypoint {
-	async myNewMethod(param: string): Promise<Result> {
-		// implementation
-	}
+  async myNewMethod(param: string): Promise<Result> {
+    // implementation
+  }
 }
 ```
 
@@ -132,10 +132,10 @@ export class WorkerRpc extends WorkerEntrypoint {
 3. **Call from web package** in any server function:
 
 ```typescript
-import { getWorkerRpc } from '@/lib/rpc';
+import { getWorkerRpc } from "@/lib/rpc";
 
 const workerRpc = getWorkerRpc();
-const result = await workerRpc.myNewMethod('value');
+const result = await workerRpc.myNewMethod("value");
 ```
 
 ## Adding Cloudflare Bindings
@@ -146,12 +146,12 @@ To add KV, D1, R2, or other bindings to the worker:
 
 ```jsonc
 {
-	"kv_namespaces": [
-		{
-			"binding": "MY_KV",
-			"id": "your-namespace-id",
-		},
-	],
+  "kv_namespaces": [
+    {
+      "binding": "MY_KV",
+      "id": "your-namespace-id",
+    },
+  ],
 }
 ```
 
@@ -159,7 +159,7 @@ To add KV, D1, R2, or other bindings to the worker:
 
 ```typescript
 interface Env {
-	MY_KV: KVNamespace;
+  MY_KV: KVNamespace;
 }
 ```
 
@@ -168,9 +168,9 @@ interface Env {
 ```typescript
 // In rpc.ts
 export class WorkerRpc extends WorkerEntrypoint<Env> {
-	async getData(key: string) {
-		return await this.env.MY_KV.get(key);
-	}
+  async getData(key: string) {
+    return await this.env.MY_KV.get(key);
+  }
 }
 ```
 
@@ -180,7 +180,7 @@ The `package.json` at the root includes `workspaces`:
 
 ```json
 {
-	"workspaces": ["packages/*"]
+  "workspaces": ["packages/*"]
 }
 ```
 
@@ -250,23 +250,23 @@ For the web package:
 ### Server Function with RPC
 
 ```typescript
-import { createServerFn } from '@tanstack/react-start';
-import { getWorkerRpc } from '@/lib/rpc';
+import { createServerFn } from "@tanstack/react-start";
+import { getWorkerRpc } from "@/lib/rpc";
 
-const myServerFn = createServerFn({ method: 'GET' }).handler(async () => {
-	const workerRpc = getWorkerRpc();
-	return await workerRpc.someMethod();
+const myServerFn = createServerFn({ method: "GET" }).handler(async () => {
+  const workerRpc = getWorkerRpc();
+  return await workerRpc.someMethod();
 });
 ```
 
 ### Route with Loader
 
 ```typescript
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/my-route')({
-	loader: async () => myServerFn(),
-	component: MyComponent,
+export const Route = createFileRoute("/my-route")({
+  loader: async () => myServerFn(),
+  component: MyComponent,
 });
 ```
 
