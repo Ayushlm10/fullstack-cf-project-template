@@ -74,7 +74,13 @@ async function updateTextFile(filePath, replacements) {
   }
 }
 
-async function updateWranglerRoutes(filePath, projectName, domain, zoneName, setWorkersDevFalse = false) {
+async function updateWranglerRoutes(
+  filePath,
+  projectName,
+  domain,
+  zoneName,
+  setWorkersDevFalse = false,
+) {
   try {
     let content = await readFile(filePath, "utf-8");
     let modified = false;
@@ -102,7 +108,8 @@ async function updateWranglerRoutes(filePath, projectName, domain, zoneName, set
 
     // Look for the entire Routes & Custom Domains comment block
     // This matches from the section header through the commented-out routes array
-    const routesSectionRegex = /\/\/ ={3,}\n  \/\/ Routes & Custom Domains\n  \/\/ ={3,}\n(?:  \/\/[^\n]*\n)*?  \/\/ \],/;
+    const routesSectionRegex =
+      /\/\/ ={3,}\n  \/\/ Routes & Custom Domains\n  \/\/ ={3,}\n(?:  \/\/[^\n]*\n)*?  \/\/ \],/;
 
     if (routesSectionRegex.test(content)) {
       content = content.replace(routesSectionRegex, routesConfig);
@@ -257,7 +264,7 @@ async function main() {
       projectName,
       webDomain,
       baseDomain,
-      true // Set workers_dev: false for custom domain
+      true, // Set workers_dev: false for custom domain
     );
 
     // Only configure worker domain if public API is requested
@@ -267,7 +274,7 @@ async function main() {
         projectName,
         apiDomain,
         baseDomain,
-        true // Set workers_dev: false for custom domain
+        true, // Set workers_dev: false for custom domain
       );
     } else {
       log("  ✓ Worker configured as private (RPC-only)", colors.dim);
