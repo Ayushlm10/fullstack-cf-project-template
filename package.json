@@ -1,18 +1,18 @@
 {
-  "name": "fullstack-bun-monorepo",
+  "name": "fullstack-cf-project-template",
   "version": "1.0.0",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "dev:worker": "bun --filter @fullstack-bun-monorepo/worker dev",
-    "dev:web": "bun --filter @fullstack-bun-monorepo/web dev",
+    "dev:worker": "bun --filter fullstack-cf-project-template-worker dev",
+    "dev:web": "bun --filter fullstack-cf-project-template-web dev",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "typecheck": "bun --filter @fullstack-bun-monorepo/worker typecheck && bun --filter @fullstack-bun-monorepo/web typecheck",
+    "typecheck": "bun --filter fullstack-cf-project-template-worker typecheck && bun --filter fullstack-cf-project-template-web typecheck",
     "ci": "bun run lint && bun run format:check && bun run typecheck"
   },
   "devDependencies": {

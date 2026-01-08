@@ -36,7 +36,7 @@ The web package's `wrangler.jsonc` configures a service binding:
 ```jsonc
 "services": [{
   "binding": "WORKER_RPC",
-  "service": "fullstack-bun-monorepo-worker",
+  "service": "fullstack-cf-project-template-worker",
   "entrypoint": "WorkerRpc"  // References the named export
 }]
 ```
@@ -103,14 +103,14 @@ cd packages/worker && bun wrangler login
 
 ```bash
 # Add dependency to specific package
-bun add <package-name> --filter @fullstack-bun-monorepo/worker
-bun add <package-name> --filter @fullstack-bun-monorepo/web
+bun add <package-name> --filter fullstack-cf-project-template/worker
+bun add <package-name> --filter fullstack-cf-project-template/web
 
 # Add dev dependency
-bun add -D <package-name> --filter @fullstack-bun-monorepo/worker
+bun add -D <package-name> --filter fullstack-cf-project-template/worker
 
 # Run script in specific package
-bun --filter @fullstack-bun-monorepo/worker dev
+bun --filter fullstack-cf-project-template/worker dev
 ```
 
 ## Adding New RPC Methods
@@ -188,12 +188,12 @@ Bun hoists dependencies to the root `node_modules` by default, which is why sche
 
 ## Package Naming Convention
 
-Packages use the `@fullstack-bun-monorepo/*` scope:
+Packages use the `fullstack-cf-project-template/*` scope:
 
-- `@fullstack-bun-monorepo/worker`
-- `@fullstack-bun-monorepo/web`
+- `fullstack-cf-project-template/worker`
+- `fullstack-cf-project-template/web`
 
-When filtering commands, use these exact names: `bun --filter @fullstack-bun-monorepo/worker <command>`
+When filtering commands, use these exact names: `bun --filter fullstack-cf-project-template/worker <command>`
 
 ## Code Quality Tools
 

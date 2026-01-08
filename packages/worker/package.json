@@ -1,5 +1,5 @@
 {
-  "name": "@fullstack-bun-monorepo/worker",
+  "name": "fullstack-cf-project-template-worker",
   "version": "1.0.0",
   "type": "module",
   "scripts": {

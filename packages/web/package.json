@@ -1,5 +1,5 @@
 {
-  "name": "@fullstack-bun-monorepo/web",
+  "name": "fullstack-cf-project-template-web",
   "version": "1.0.0",
   "private": true,
   "type": "module",

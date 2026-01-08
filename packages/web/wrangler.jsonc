@@ -4,7 +4,7 @@
   // ============================================
   // Basic Configuration
   // ============================================
-  "name": "fullstack-bun-monorepo-web",
+  "name": "fullstack-cf-project-template-web",
   "main": "@tanstack/react-start/server-entry",
   "compatibility_date": "2025-09-06",
   "compatibility_flags": ["nodejs_compat"],
@@ -38,7 +38,7 @@
   "services": [
     {
       "binding": "WORKER_RPC",
-      "service": "fullstack-bun-monorepo-worker",
+      "service": "fullstack-cf-project-template-worker",
       "entrypoint": "WorkerRpc",
     },
   ],

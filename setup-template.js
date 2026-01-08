@@ -151,7 +151,7 @@ async function main() {
   }
 
   const scopedPrefix = packageScope ? `${packageScope}/` : "";
-  const oldScope = "@fullstack-bun-monorepo/";
+  const oldScope = "fullstack-cf-project-template/";
 
   log("\n📝 Project Configuration:", colors.bright);
   log(`   Name: ${projectName}`, colors.dim);
@@ -207,13 +207,13 @@ async function main() {
   // Update wrangler.jsonc files
   log("\nUpdating wrangler configurations...", colors.blue);
   await updateTextFile("./packages/worker/wrangler.jsonc", [
-    ["fullstack-bun-monorepo-worker", `${projectName}-worker`],
+    ["fullstack-cf-project-template-worker", `${projectName}-worker`],
     [oldScope, scopedPrefix],
   ]);
 
   await updateTextFile("./packages/web/wrangler.jsonc", [
-    ["fullstack-bun-monorepo-web", `${projectName}-web`],
-    ["fullstack-bun-monorepo-worker", `${projectName}-worker`],
+    ["fullstack-cf-project-template-web", `${projectName}-web`],
+    ["fullstack-cf-project-template-worker", `${projectName}-worker`],
     [oldScope, scopedPrefix],
   ]);
 
@@ -248,7 +248,7 @@ async function main() {
   for (const file of filesToUpdate) {
     await updateTextFile(file, [
       [oldScope, scopedPrefix],
-      ["fullstack-bun-monorepo", projectName],
+      ["fullstack-cf-project-template", projectName],
     ]);
   }
 

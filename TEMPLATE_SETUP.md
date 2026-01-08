@@ -94,7 +94,7 @@ If you prefer to set up manually:
 
 ### 1. Update Package Names
 
-Edit the following files and replace `@fullstack-bun-monorepo` with your scope/name:
+Edit the following files and replace `fullstack-cf-project-template` with your scope/name:
 
 **Root `package.json`:**
 
@@ -148,8 +148,8 @@ Edit the following files and replace `@fullstack-bun-monorepo` with your scope/n
 
 Find and replace in all source files:
 
-- `@fullstack-bun-monorepo/` → `@your-scope/`
-- `fullstack-bun-monorepo` → `your-project`
+- `fullstack-cf-project-template/` → `@your-scope/`
+- `fullstack-cf-project-template` → `your-project`
 
 ### 4. Clean Up Template Files
 

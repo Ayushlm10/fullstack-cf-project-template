@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
 
-  "name": "fullstack-bun-monorepo-worker",
+  "name": "fullstack-cf-project-template-worker",
   "main": "src/index.ts",
   "compatibility_date": "2025-09-06",
 
@@ -79,7 +79,7 @@
   //     {
   //       "name": "COUNTER",
   //       "class_name": "Counter",
-  //       "script_name": "fullstack-bun-monorepo-worker"
+  //       "script_name": "fullstack-cf-project-template-worker"
   //     }
   //   ]
   // },

@@ -3,7 +3,7 @@
 // Runtime types generated with workerd@1.20260103.0 2025-09-06 nodejs_compat
 declare namespace Cloudflare {
 	interface Env {
-		WORKER_RPC: Service /* entrypoint WorkerRpc from fullstack-bun-monorepo-worker */;
+		WORKER_RPC: Service /* entrypoint WorkerRpc from fullstack-cf-project-template-worker */;
 	}
 }
 interface Env extends Cloudflare.Env {}
