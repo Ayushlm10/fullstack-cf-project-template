@@ -74,11 +74,21 @@ async function updateTextFile(filePath, replacements) {
   }
 }
 
-async function updateWranglerRoutes(filePath, projectName, domain, zoneName) {
+async function updateWranglerRoutes(filePath, projectName, domain, zoneName, setWorkersDevFalse = false) {
   try {
     let content = await readFile(filePath, "utf-8");
+    let modified = false;
 
-    // Find the routes section and uncomment/configure it
+    // Set workers_dev to false if custom domain is being used
+    if (setWorkersDevFalse) {
+      const workersDevRegex = /"workers_dev":\s*(true|false)/;
+      if (workersDevRegex.test(content)) {
+        content = content.replace(workersDevRegex, '"workers_dev": false');
+        modified = true;
+      }
+    }
+
+    // Find the Routes & Custom Domains section and replace it
     const routesConfig = `  // ============================================
   // Routes & Custom Domains
   // ============================================
@@ -89,20 +99,26 @@ async function updateWranglerRoutes(filePath, projectName, domain, zoneName) {
     }
   ],`;
 
-    // Replace the commented routes section
-    content = content.replace(
-      /\/\/ ============================================\n  \/\/ Routes & Custom Domains\n  \/\/ ============================================\n  \/\/ Uncomment and configure for production custom domains\n  \/\/ "routes": \[\n  \/\/   \{\n  \/\/     "pattern": "[^"]+",\n  \/\/     "zone_name": "[^"]+"\n  \/\/   \}[,\s]*\n  \/\/   \{\n  \/\/     "pattern": "[^"]+",\n  \/\/     "zone_name": "[^"]+"\n  \/\/   \}\n  \/\/ \],/,
-      routesConfig,
-    );
+    // Look for the entire Routes & Custom Domains comment block
+    // This matches from the section header through the commented-out routes array
+    const routesSectionRegex = /\/\/ ={3,}\n  \/\/ Routes & Custom Domains\n  \/\/ ={3,}\n(?:  \/\/[^\n]*\n)*?  \/\/ \],/;
 
-    // Also handle the simpler pattern in worker wrangler
-    content = content.replace(
-      /\/\/ ============================================\n  \/\/ Routes & Custom Domains\n  \/\/ ============================================\n  \/\/ Uncomment and configure for production custom domains\n  \/\/ "routes": \[\n  \/\/   \{\n  \/\/     "pattern": "[^"]+",\n  \/\/     "zone_name": "[^"]+"\n  \/\/   \}\n  \/\/ \],/,
-      routesConfig,
-    );
+    if (routesSectionRegex.test(content)) {
+      content = content.replace(routesSectionRegex, routesConfig);
+      modified = true;
+    } else {
+      log(`  ⚠ Could not match routes section pattern`, colors.yellow);
+    }
 
-    await writeFile(filePath, content);
-    log(`  ✓ Configured routes in ${filePath}`, colors.dim);
+    if (modified) {
+      await writeFile(filePath, content);
+      log(`  ✓ Configured routes in ${filePath}`, colors.dim);
+      if (setWorkersDevFalse) {
+        log(`  ✓ Set workers_dev: false`, colors.dim);
+      }
+    } else {
+      log(`  ⚠ Could not find routes section in ${filePath}`, colors.yellow);
+    }
   } catch (error) {
     log(`  ⚠ Could not update routes in ${filePath}: ${error.message}`, colors.yellow);
   }
@@ -150,12 +166,14 @@ async function main() {
     }
   }
 
-  const scopedPrefix = packageScope ? `${packageScope}/` : "";
-  const oldScope = "fullstack-cf-project-template/";
+  // Root package can have scope, but worker/web packages must match wrangler names (no scope)
+  const rootPkgName = packageScope ? `${packageScope}/${projectName}` : projectName;
 
   log("\n📝 Project Configuration:", colors.bright);
   log(`   Name: ${projectName}`, colors.dim);
-  log(`   Scope: ${packageScope || "(none)"}`, colors.dim);
+  log(`   Root Package: ${rootPkgName}`, colors.dim);
+  log(`   Worker Package: ${projectName}-worker`, colors.dim);
+  log(`   Web Package: ${projectName}-web`, colors.dim);
   log(`   Description: ${description}`, colors.dim);
   log(`   Author: ${author}`, colors.dim);
   if (baseDomain) {
@@ -176,29 +194,39 @@ async function main() {
 
   log("\n🔧 Setting up project...\n", colors.bright);
 
+  // Define package names (matching wrangler.jsonc naming without @ scope)
+  const workerPkgName = `${projectName}-worker`;
+  const webPkgName = `${projectName}-web`;
+
   // Update root package.json
   log("Updating package.json files...", colors.blue);
   await updateJsonFile("./package.json", (json) => ({
     ...json,
-    name: `${scopedPrefix}${projectName}`,
+    name: rootPkgName,
     description: description || json.description,
     author: author || json.author,
     version: "0.1.0",
+    scripts: {
+      ...json.scripts,
+      "dev:worker": `bun --filter ${workerPkgName} dev`,
+      "dev:web": `bun --filter ${webPkgName} dev`,
+      typecheck: `bun --filter ${workerPkgName} typecheck && bun --filter ${webPkgName} typecheck`,
+    },
   }));
 
-  // Update worker package.json
+  // Update worker package.json (no @ scope to match wrangler name)
   await updateJsonFile("./packages/worker/package.json", (json) => ({
     ...json,
-    name: `${scopedPrefix}${projectName}-worker`,
+    name: workerPkgName,
     description: `Backend worker for ${projectName}`,
     author: author || json.author,
     version: "0.1.0",
   }));
 
-  // Update web package.json
+  // Update web package.json (no @ scope to match wrangler name)
   await updateJsonFile("./packages/web/package.json", (json) => ({
     ...json,
-    name: `${scopedPrefix}${projectName}-web`,
+    name: webPkgName,
     description: `Frontend web app for ${projectName}`,
     author: author || json.author,
     version: "0.1.0",
@@ -207,22 +235,26 @@ async function main() {
   // Update wrangler.jsonc files
   log("\nUpdating wrangler configurations...", colors.blue);
   await updateTextFile("./packages/worker/wrangler.jsonc", [
-    ["fullstack-cf-project-template-worker", `${projectName}-worker`],
-    [oldScope, scopedPrefix],
+    ["fullstack-cf-project-template-worker", workerPkgName],
   ]);
 
   await updateTextFile("./packages/web/wrangler.jsonc", [
-    ["fullstack-cf-project-template-web", `${projectName}-web`],
-    ["fullstack-cf-project-template-worker", `${projectName}-worker`],
-    [oldScope, scopedPrefix],
+    ["fullstack-cf-project-template-web", webPkgName],
+    ["fullstack-cf-project-template-worker", workerPkgName],
   ]);
 
   // Configure custom domains if provided
   if (baseDomain) {
     log("\nConfiguring custom domains...", colors.blue);
 
-    // Always configure web domain
-    await updateWranglerRoutes("./packages/web/wrangler.jsonc", projectName, webDomain, baseDomain);
+    // Always configure web domain and set workers_dev: false
+    await updateWranglerRoutes(
+      "./packages/web/wrangler.jsonc",
+      projectName,
+      webDomain,
+      baseDomain,
+      true // Set workers_dev: false for custom domain
+    );
 
     // Only configure worker domain if public API is requested
     if (usePublicApi) {
@@ -231,6 +263,7 @@ async function main() {
         projectName,
         apiDomain,
         baseDomain,
+        true // Set workers_dev: false for custom domain
       );
     } else {
       log("  ✓ Worker configured as private (RPC-only)", colors.dim);
@@ -243,11 +276,13 @@ async function main() {
     "./README.md",
     "./packages/web/src/routes/index.tsx",
     "./packages/web/env.d.ts",
+    "./packages/web/worker-configuration.d.ts",
   ];
 
   for (const file of filesToUpdate) {
     await updateTextFile(file, [
-      [oldScope, scopedPrefix],
+      ["fullstack-cf-project-template-worker", workerPkgName],
+      ["fullstack-cf-project-template-web", webPkgName],
       ["fullstack-cf-project-template", projectName],
     ]);
   }
@@ -308,16 +343,34 @@ async function main() {
   log("Next steps:", colors.bright);
   log("  1. Run: bun install", colors.dim);
   log("  2. Review .env.example files and create .env files", colors.dim);
-  log("  3. Update wrangler.jsonc files with your Cloudflare account_id", colors.dim);
+  log("  3. Add your Cloudflare account_id to wrangler.jsonc files:", colors.dim);
+  log("     - packages/worker/wrangler.jsonc", colors.dim);
+  log("     - packages/web/wrangler.jsonc", colors.dim);
+
   if (baseDomain) {
+    log("\n  Configuration applied:", colors.bright);
+    log(`  ✓ Web domain configured: ${webDomain}`, colors.green);
+    log(`  ✓ workers_dev set to false (using custom domain)`, colors.green);
+    if (usePublicApi) {
+      log(`  ✓ API domain configured: ${apiDomain}`, colors.green);
+      log(`  ✓ Worker has public API + RPC access`, colors.green);
+    } else {
+      log(`  ✓ Worker is private (RPC-only, no public URL)`, colors.green);
+    }
+
+    log("\n  Before deploying:", colors.bright);
     log(`  4. Ensure ${baseDomain} is added to your Cloudflare account`, colors.dim);
-    log("  5. Start development: bun dev:worker & bun dev:web", colors.dim);
-    log(
-      `  6. Deploy: Web will be at ${webDomain}${usePublicApi ? `, API at ${apiDomain}` : ""}`,
-      colors.dim,
-    );
-    log("  7. Read README.md for detailed documentation\n", colors.dim);
+    log("     (Go to dash.cloudflare.com → Add Site)", colors.dim);
+    log("  5. Verify routes in wrangler.jsonc files are correct", colors.dim);
+    log("  6. Start development: bun dev:worker & bun dev:web", colors.dim);
+    log(`  7. Deploy: Web → ${webDomain}${usePublicApi ? `, API → ${apiDomain}` : ""}`, colors.dim);
+    log("  8. Read README.md for detailed documentation\n", colors.dim);
   } else {
+    log("\n  Configuration applied:", colors.bright);
+    log("  ✓ Will deploy to workers.dev subdomain", colors.green);
+    log("  ✓ workers_dev set to true", colors.green);
+
+    log("\n  Continue setup:", colors.bright);
     log("  4. Start development: bun dev:worker & bun dev:web", colors.dim);
     log("  5. Deploy: Will use workers.dev subdomain", colors.dim);
     log("  6. Read README.md for detailed documentation\n", colors.dim);
