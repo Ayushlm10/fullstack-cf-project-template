@@ -74,7 +74,9 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Build web app
-        run: bun --filter @fullstack-bun-monorepo/web run build
+        run: |
+          cd packages/web
+          bun run build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

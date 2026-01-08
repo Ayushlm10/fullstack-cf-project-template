@@ -55,13 +55,11 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build web app
-        run: bun --filter @fullstack-bun-monorepo/web run build
-
-      - name: Deploy to Cloudflare Workers
+      - name: Build and Deploy Web
         id: deploy
         run: |
           cd packages/web
+          bun run build
           bun wrangler deploy --minify
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
