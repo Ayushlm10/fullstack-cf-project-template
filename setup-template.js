@@ -94,8 +94,9 @@ async function updateWranglerRoutes(filePath, projectName, domain, zoneName, set
   // ============================================
   "routes": [
     {
-      "pattern": "${domain}/*",
-      "zone_name": "${zoneName}"
+      "pattern": "${domain}",
+      "zone_name": "${zoneName}",
+      "custom_domain": true
     }
   ],`;
 

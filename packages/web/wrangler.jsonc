@@ -26,8 +26,9 @@
   // Example: project-name.yourdomain.com
   // "routes": [
   //   {
-  //     "pattern": "your-project.yourdomain.com/*",
-  //     "zone_name": "yourdomain.com"
+  //     "pattern": "your-project.yourdomain.com",
+  //     "zone_name": "yourdomain.com",
+  //     "custom_domain": true
   //   }
   // ],
 
