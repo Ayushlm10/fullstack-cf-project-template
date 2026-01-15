@@ -1,4 +1,6 @@
-# AGENTS.md
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
@@ -88,12 +90,22 @@ bun run format      # Format all code with oxfmt
 bun run format:check # Check formatting without changes
 ```
 
+### Type Checking
+
+```bash
+bun run typecheck   # Type check all packages
+bun run ci          # Run lint + format check + typecheck
+```
+
 ### Deployment
 
 ```bash
 # Deploy individually
 cd packages/worker && bun run deploy
 cd packages/web && bun run deploy
+
+# Deploy both (worker first, then web)
+bun run deploy
 
 # Login to Cloudflare first (one-time)
 cd packages/worker && bun wrangler login
@@ -103,14 +115,14 @@ cd packages/worker && bun wrangler login
 
 ```bash
 # Add dependency to specific package
-bun add <package-name> --filter fullstack-cf-project-template/worker
-bun add <package-name> --filter fullstack-cf-project-template/web
+bun add <package-name> --filter fullstack-cf-project-template-worker
+bun add <package-name> --filter fullstack-cf-project-template-web
 
 # Add dev dependency
-bun add -D <package-name> --filter fullstack-cf-project-template/worker
+bun add -D <package-name> --filter fullstack-cf-project-template-worker
 
 # Run script in specific package
-bun --filter fullstack-cf-project-template/worker dev
+bun --filter fullstack-cf-project-template-worker dev
 ```
 
 ## Adding New RPC Methods
@@ -188,12 +200,12 @@ Bun hoists dependencies to the root `node_modules` by default, which is why sche
 
 ## Package Naming Convention
 
-Packages use the `fullstack-cf-project-template/*` scope:
+Packages use the `fullstack-cf-project-template-*` naming:
 
-- `fullstack-cf-project-template/worker`
-- `fullstack-cf-project-template/web`
+- `fullstack-cf-project-template-worker`
+- `fullstack-cf-project-template-web`
 
-When filtering commands, use these exact names: `bun --filter fullstack-cf-project-template/worker <command>`
+When filtering commands, use these exact names: `bun --filter fullstack-cf-project-template-worker <command>`
 
 ## Code Quality Tools
 
